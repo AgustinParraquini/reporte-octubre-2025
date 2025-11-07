@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Análisis de Retención: AI Product Feature</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .section {
+            margin-bottom: 50px;
+        }
+
+        .section-title {
+            font-size: 2em;
+            color: #667eea;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #667eea;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .subsection-title {
+            font-size: 1.5em;
+            color: #764ba2;
+            margin: 30px 0 15px 0;
+        }
+
+        .metric-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 8px;
+            margin: 20px 0;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .metric-card h3 {
+            font-size: 1.3em;
+            margin-bottom: 10px;
+            opacity: 0.9;
+        }
+
+        .metric-card .big-number {
+            font-size: 3em;
+            font-weight: 700;
+            margin: 10px 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        table thead {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        table th, table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+
+        table tbody tr:hover {
+            background-color: #f8f9ff;
+        }
+
+        .insight-box {
+            background: #f8f9ff;
+            border-left: 4px solid #667eea;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+
+        .insight-box h4 {
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 1.2em;
+        }
+
+        .insight-box ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .insight-box li {
+            padding: 8px 0;
+            padding-left: 25px;
+            position: relative;
+        }
+
+        .insight-box li:before {
+            content: "→";
+            position: absolute;
+            left: 0;
+            color: #667eea;
+            font-weight: bold;
+        }
+
+        .warning-box {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+
+        .success-box {
+            background: #d4edda;
+            border-left: 4px solid #28a745;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .stat-box {
+            background: white;
+            border: 2px solid #e0e0e0;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .stat-box:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.2);
+        }
+
+        .stat-box .number {
+            font-size: 2.5em;
+            font-weight: 700;
+            color: #667eea;
+            display: block;
+            margin: 10px 0;
+        }
+
+        .stat-box .label {
+            color: #666;
+            font-size: 1.1em;
+        }
+
+        .recommendation {
+            background: white;
+            border: 2px solid #667eea;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 8px;
+            position: relative;
+            padding-left: 60px;
+        }
+
+        .recommendation:before {
+            content: "💡";
+            position: absolute;
+            left: 20px;
+            top: 20px;
+            font-size: 2em;
+        }
+
+        .recommendation h4 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .footer {
+            background: #f8f9fa;
+            padding: 30px;
+            text-align: center;
+            color: #666;
+            border-top: 3px solid #667eea;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: 600;
+            margin: 5px;
+        }
+
+        .badge-warning {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .badge-success {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .badge-info {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8em;
+            }
+            
+            .section-title {
+                font-size: 1.5em;
+            }
+            
+            .grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📊 Análisis de Retención y Uso</h1>
+            <p>Feature: product_list_add_product_ai_modal_create_click</p>
+            <p style="font-size: 0.9em; margin-top: 10px;">Período: Últimos 90 días | Generado: Noviembre 2025</p>
+        </div>
+
+        <div class="content">
+            <!-- Executive Summary -->
+            <section class="section">
+                <h2 class="section-title">📋 Resumen Ejecutivo</h2>
+                
+                <div class="metric-card">
+                    <h3>Métricas Principales</h3>
+                    <div class="grid">
+                        <div>
+                            <div class="big-number">5,280</div>
+                            <p>Usuarios Únicos Totales</p>
+                        </div>
+                        <div>
+                            <div class="big-number">59.3%</div>
+                            <p>Usan Solo 1 Vez</p>
+                        </div>
+                        <div>
+                            <div class="big-number">12.4%</div>
+                            <p>Power Users (6+ usos)</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="warning-box">
+                    <h4>⚠️ Alerta Principal</h4>
+                    <p><strong>59.3% de los usuarios (3,132 usuarios) usan la feature solo UNA VEZ y nunca vuelven.</strong> Esto indica un problema significativo de retención que requiere atención inmediata.</p>
+                </div>
+            </section>
+
+            <!-- Análisis de Frecuencia -->
+            <section class="section">
+                <h2 class="section-title">📈 Análisis de Frecuencia de Uso</h2>
+                
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Frecuencia de Uso</th>
+                            <th>Usuarios</th>
+                            <th>% del Total</th>
+                            <th>Categoría</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>1 vez</strong></td>
+                            <td>3,132</td>
+                            <td>59.3%</td>
+                            <td><span class="badge badge-warning">One-time</span></td>
+                        </tr>
+                        <tr>
+                            <td>2 veces</td>
+                            <td>715</td>
+                            <td>13.5%</td>
+                            <td><span class="badge badge-info">Regular</span></td>
+                        </tr>
+                        <tr>
+                            <td>3 veces</td>
+                            <td>352</td>
+                            <td>6.7%</td>
+                            <td><span class="badge badge-info">Regular</span></td>
+                        </tr>
+                        <tr>
+                            <td>4 veces</td>
+                            <td>250</td>
+                            <td>4.7%</td>
+                            <td><span class="badge badge-info">Regular</span></td>
+                        </tr>
+                        <tr>
+                            <td>5 veces</td>
+                            <td>177</td>
+                            <td>3.4%</td>
+                            <td><span class="badge badge-info">Regular</span></td>
+                        </tr>
+                        <tr style="background: #f8f9ff;">
+                            <td><strong>6-10 veces</strong></td>
+                            <td>376</td>
+                            <td>7.1%</td>
+                            <td><span class="badge badge-success">Power User</span></td>
+                        </tr>
+                        <tr style="background: #f8f9ff;">
+                            <td><strong>11-20 veces</strong></td>
+                            <td>218</td>
+                            <td>4.1%</td>
+                            <td><span class="badge badge-success">Power User</span></td>
+                        </tr>
+                        <tr style="background: #f8f9ff;">
+                            <td><strong>21-50 veces</strong></td>
+                            <td>55</td>
+                            <td>1.0%</td>
+                            <td><span class="badge badge-success">Power User</span></td>
+                        </tr>
+                        <tr style="background: #f8f9ff;">
+                            <td><strong>51-100 veces</strong></td>
+                            <td>4</td>
+                            <td>0.1%</td>
+                            <td><span class="badge badge-success">Super User</span></td>
+                        </tr>
+                        <tr style="background: #f8f9ff;">
+                            <td><strong>>100 veces</strong></td>
+                            <td>1</td>
+                            <td>0.0%</td>
+                            <td><span class="badge badge-success">Super User</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="insight-box">
+                    <h4>🔍 Insights Clave</h4>
+                    <ul>
+                        <li><strong>2,148 usuarios (40.7%)</strong> vuelven a usar la feature 2 o más veces</li>
+                        <li><strong>654 usuarios (12.4%)</strong> son power users que la usan 6+ veces</li>
+                        <li>Solo <strong>5 usuarios</strong> son super users extremos (50+ usos)</li>
+                        <li>Promedio estimado: <strong>3.1 usos por usuario</strong></li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Análisis de Retención Temporal -->
+            <section class="section">
+                <h2 class="section-title">⏰ Retención Temporal</h2>
+                
+                <div class="grid">
+                    <div class="stat-box">
+                        <span class="number">13.4%</span>
+                        <span class="label">Retención Día 1</span>
+                    </div>
+                    <div class="stat-box">
+                        <span class="number">8.8%</span>
+                        <span class="label">Retención Día 7</span>
+                    </div>
+                    <div class="stat-box">
+                        <span class="number">6.1%</span>
+                        <span class="label">Retención Día 14</span>
+                    </div>
+                </div>
+
+                <div class="warning-box">
+                    <h4>⚠️ Retención Baja</h4>
+                    <p>Solo el <strong>13.4%</strong> de los usuarios vuelven a usar la feature al día siguiente. La retención cae rápidamente a 8.8% en 7 días y 6.1% en 14 días.</p>
+                </div>
+            </section>
+
+            <!-- Análisis de Power Users -->
+            <section class="section">
+                <h2 class="section-title">⭐ Descomposición de Power Users</h2>
+                
+                <h3 class="subsection-title">🌎 Distribución Geográfica</h3>
+                
+                <table>
+                    <thead>
+                        <tr>
+                            <th>País</th>
+                            <th>Usuarios</th>
+                            <th>% del Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>🇦🇷 <strong>Argentina</strong></td>
+                            <td>2,544</td>
+                            <td>48.5%</td>
+                        </tr>
+                        <tr>
+                            <td>🇧🇷 <strong>Brasil</strong></td>
+                            <td>2,515</td>
+                            <td>47.9%</td>
+                        </tr>
+                        <tr>
+                            <td>🇲🇽 México</td>
+                            <td>118</td>
+                            <td>2.2%</td>
+                        </tr>
+                        <tr>
+                            <td>🇨🇴 Colombia</td>
+                            <td>47</td>
+                            <td>0.9%</td>
+                        </tr>
+                        <tr>
+                            <td>🇨🇱 Chile</td>
+                            <td>25</td>
+                            <td>0.5%</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="success-box">
+                    <h4>✅ Insight Geográfico</h4>
+                    <p><strong>Argentina y Brasil representan el 96.4%</strong> de todos los usuarios. Están prácticamente empatados en adopción, lo que indica un product-market fit fuerte en estos mercados.</p>
+                </div>
+
+                <h3 class="subsection-title">🎨 Comportamiento: Cantidad de Imágenes</h3>
+                
+                <div class="grid">
+                    <div class="stat-box">
+                        <span class="number">39.9%</span>
+                        <span class="label">Generan 3 imágenes<br>(Máximo)</span>
+                    </div>
+                    <div class="stat-box">
+                        <span class="number">38.7%</span>
+                        <span class="label">Generan 1 imagen</span>
+                    </div>
+                    <div class="stat-box">
+                        <span class="number">21.4%</span>
+                        <span class="label">Generan 2 imágenes</span>
+                    </div>
+                </div>
+
+                <div class="insight-box">
+                    <h4>🎯 Insight de Producto</h4>
+                    <ul>
+                        <li><strong>40% de usuarios maximiza el límite de 3 imágenes</strong> por sesión</li>
+                        <li>Esto sugiere que el límite actual puede ser restrictivo</li>
+                        <li>Los power users probablemente están en este grupo del 40%</li>
+                    </ul>
+                </div>
+
+                <h3 class="subsection-title">👤 Perfil Típico del Power User</h3>
+                
+                <div class="insight-box">
+                    <h4>Características del Power User</h4>
+                    <ul>
+                        <li><strong>Geografía:</strong> Argentina o Brasil (96% de probabilidad)</li>
+                        <li><strong>Frecuencia:</strong> 6-10 usos (57.5% de power users)</li>
+                        <li><strong>Comportamiento:</strong> Genera 3 imágenes por sesión (maximiza capacidad)</li>
+                        <li><strong>Plataforma:</strong> Web (100%)</li>
+                        <li><strong>Admin:</strong> Nuevo admin (100% new_admin=true)</li>
+                    </ul>
+                </div>
+
+                <h3 class="subsection-title">🔢 Segmentación de Power Users</h3>
+                
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Nivel</th>
+                            <th>Rango de Usos</th>
+                            <th>Usuarios</th>
+                            <th>% de Power Users</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Moderados</td>
+                            <td>6-10 veces</td>
+                            <td>376</td>
+                            <td>57.5%</td>
+                        </tr>
+                        <tr>
+                            <td>Comprometidos</td>
+                            <td>11-20 veces</td>
+                            <td>218</td>
+                            <td>33.3%</td>
+                        </tr>
+                        <tr>
+                            <td>Muy Activos</td>
+                            <td>21-50 veces</td>
+                            <td>55</td>
+                            <td>8.4%</td>
+                        </tr>
+                        <tr style="background: #d4edda;">
+                            <td><strong>⭐ Super Usuarios</strong></td>
+                            <td><strong>50+ veces</strong></td>
+                            <td><strong>5</strong></td>
+                            <td><strong>0.8%</strong></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="success-box">
+                    <h4>🎯 Oportunidad</h4>
+                    <p>Hay <strong>5 super usuarios que han usado la feature 50+ veces</strong>. Estos son candidatos perfectos para entrevistas en profundidad y pueden proporcionar insights valiosos sobre qué hace que la feature sea tan útil.</p>
+                </div>
+            </section>
+
+            <!-- Recomendaciones -->
+            <section class="section">
+                <h2 class="section-title">💡 Recomendaciones Estratégicas</h2>
+                
+                <div class="recommendation">
+                    <h4>1. Investigación de Usuario</h4>
+                    <p><strong>Prioridad: ALTA</strong></p>
+                    <ul>
+                        <li>Entrevistar a los 5 super usuarios (50+ usos) para entender qué valor obtienen</li>
+                        <li>Hacer focus groups con usuarios "one-time" para entender por qué no volvieron</li>
+                        <li>Analizar diferencias entre usuarios que generan 1 vs 3 imágenes</li>
+                    </ul>
+                </div>
+
+                <div class="recommendation">
+                    <h4>2. Mejoras de Producto</h4>
+                    <p><strong>Prioridad: ALTA</strong></p>
+                    <ul>
+                        <li><strong>Considerar aumentar el límite de 3 imágenes</strong> - 40% de usuarios lo maximiza</li>
+                        <li>Mejorar la experiencia de primer uso para reducir el 59% de abandono</li>
+                        <li>Agregar funcionalidades que incentiven el uso recurrente</li>
+                    </ul>
+                </div>
+
+                <div class="recommendation">
+                    <h4>3. Estrategia Geográfica</h4>
+                    <p><strong>Prioridad: MEDIA</strong></p>
+                    <ul>
+                        <li>Priorizar Argentina y Brasil para growth (96% de usuarios)</li>
+                        <li>Investigar por qué México tiene menor adopción (solo 2.2%)</li>
+                        <li>Considerar localización específica por país</li>
+                    </ul>
+                </div>
+
+                <div class="recommendation">
+                    <h4>4. Optimización de Retención</h4>
+                    <p><strong>Prioridad: CRÍTICA</strong></p>
+                    <ul>
+                        <li>Implementar onboarding mejorado para reducir usuarios one-time</li>
+                        <li>Crear triggers/notificaciones para incentivar segundo uso</li>
+                        <li>Estudiar qué hace que 12.4% se conviertan en power users y replicarlo</li>
+                        <li>A/B test de diferentes flows para usuarios nuevos</li>
+                    </ul>
+                </div>
+
+                <div class="recommendation">
+                    <h4>5. Segmentación para Acción</h4>
+                    <p><strong>Prioridad: MEDIA</strong></p>
+                    <ul>
+                        <li>Crear cohorte de super usuarios (60 usuarios con 21+ usos) para beta testing</li>
+                        <li>Segmentar comunicación por nivel de uso</li>
+                        <li>Programa de "champions" con power users</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Conclusiones -->
+            <section class="section">
+                <h2 class="section-title">🎯 Conclusiones</h2>
+                
+                <div class="insight-box">
+                    <h4>Hallazgos Principales</h4>
+                    <ul>
+                        <li><strong>Problema crítico de retención:</strong> 59% usa solo 1 vez</li>
+                        <li><strong>Oportunidad clara:</strong> 41% que vuelve demuestra que hay valor</li>
+                        <li><strong>Product-market fit fuerte</strong> en Argentina y Brasil</li>
+                        <li><strong>Limitación de producto:</strong> 40% maximiza el límite de 3 imágenes</li>
+                        <li><strong>Segmento valioso:</strong> 654 power users comprometidos</li>
+                    </ul>
+                </div>
+
+                <div class="warning-box">
+                    <h4>⚠️ Puntos de Atención Inmediata</h4>
+                    <ul>
+                        <li>La retención del primer día (13.4%) es preocupantemente baja</li>
+                        <li>El 59% de usuarios one-time representa una pérdida masiva de potencial</li>
+                        <li>La experiencia inicial claramente necesita mejoras</li>
+                    </ul>
+                </div>
+
+                <div class="success-box">
+                    <h4>✅ Señales Positivas</h4>
+                    <ul>
+                        <li>12.4% de conversión a power user es una base sólida para optimizar</li>
+                        <li>Existe un grupo de super usuarios muy comprometidos</li>
+                        <li>Alta concentración geográfica facilita targeting y research</li>
+                        <li>El 40% que maximiza uso indica demanda por más capacidad</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Próximos Pasos -->
+            <section class="section">
+                <h2 class="section-title">🚀 Próximos Pasos Recomendados</h2>
+                
+                <div style="background: #f8f9ff; padding: 30px; border-radius: 8px; border: 2px solid #667eea;">
+                    <h3 style="color: #667eea; margin-bottom: 20px;">Roadmap de Acción (Próximos 30 días)</h3>
+                    
+                    <div style="margin-bottom: 25px;">
+                        <h4 style="color: #764ba2;">Semana 1-2: Research</h4>
+                        <ul style="list-style: none; padding-left: 20px;">
+                            <li>✓ Contactar y entrevistar a los 5 super usuarios</li>
+                            <li>✓ Encuesta rápida a usuarios one-time sobre por qué no volvieron</li>
+                            <li>✓ Analizar sesiones de replay de primeros usos</li>
+                        </ul>
+                    </div>
+                    
+                    <div style="margin-bottom: 25px;">
+                        <h4 style="color: #764ba2;">Semana 2-3: Análisis</h4>
+                        <ul style="list-style: none; padding-left: 20px;">
+                            <li>✓ Compilar insights de research</li>
+                            <li>✓ Definir hipótesis de mejoras</li>
+                            <li>✓ Priorizar experimentos</li>
+                        </ul>
+                    </div>
+                    
+                    <div>
+                        <h4 style="color: #764ba2;">Semana 4: Acción</h4>
+                        <ul style="list-style: none; padding-left: 20px;">
+                            <li>✓ Diseñar A/B tests para retención</li>
+                            <li>✓ Evaluar aumento de límite de imágenes</li>
+                            <li>✓ Implementar mejoras en onboarding</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <div class="footer">
+            <p><strong>Análisis realizado con Amplitude MCP</strong></p>
+            <p>Feature: product_list_add_product_ai_modal_create_click</p>
+            <p>Período de análisis: Últimos 90 días (Agosto - Noviembre 2025)</p>
+            <p style="margin-top: 20px; font-size: 0.9em;">
+                Total de usuarios analizados: 5,280 | Power Users: 654 (12.4%)
+            </p>
+        </div>
+    </div>
+</body>
+</html>
+
